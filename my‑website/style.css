@@ -1,0 +1,727 @@
+/* ===================================================================
+   BARA — style.css
+   ICT2215 Assessment 2 · one landing page, one stylesheet
+   Structure of this file:
+     1. Design tokens (colour, type, spacing)
+     2. Reset and base styles
+     3. Header / navigation
+     4. Hero
+     5. Section shell, headings, buttons
+     6. About (split layout + facts)
+     7. Menu
+     8. Story (video)
+     9. Contact (details + form)
+    10. Footer
+    11. Responsive rules (tablet / phone)
+   =================================================================== */
+
+/* ---------- 1. DESIGN TOKENS ---------------------------------------
+   Five colours only: paper, sun, coral, teal, ink.
+   Every text pairing clears 4.5:1; coral is used for graphics and
+   large type, never for small body copy.                             */
+:root {
+  --espresso: #17262b;   /* ink — text and borders        */
+  --roast:    #0c6a70;   /* teal — secondary text, captions */
+  --caramel:  #d93a50;   /* coral — buttons, rules, icons  */
+  --cream:    #fffbf2;   /* paper                          */
+  --oat:      #ffce3a;   /* sunburst — menu band           */
+  --teal:     #0c6a70;   /* contact block                  */
+  --line:     #e3dcc6;
+
+  --serif: Georgia, "Times New Roman", "Songti SC", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --maxw: 1140px;
+  --gut:  clamp(20px, 5vw, 64px);
+  --sect: clamp(64px, 9vw, 112px);
+}
+
+/* ---------- 2. RESET AND BASE -------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 92px;   /* stops the sticky header covering headings */
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--espresso);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video { display: block; max-width: 100%; height: auto; }
+
+a { color: inherit; }
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+p { margin: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--caramel);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 24px;
+  z-index: 100;
+  background: var(--espresso);
+  color: var(--cream);
+  padding: 10px 18px;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 12px; }
+
+/* Layout container: one width for the whole page = alignment */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+/* ---------- 3. HEADER / NAVIGATION --------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 251, 242, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 74px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  color: var(--espresso);
+}
+
+.brand-text { display: flex; flex-direction: column; gap: 1px; }
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  color: var(--caramel);
+}
+
+.brand-name {
+  font-family: var(--sans);
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.brand-sub {
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--roast);
+  white-space: nowrap;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.6vw, 34px);
+}
+
+.main-nav a {
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  color: var(--espresso);
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: var(--caramel);
+  border-bottom-color: var(--caramel);
+}
+
+/* ---------- 4. HERO ------------------------------------------------ */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(560px, 78vh, 800px);
+  overflow: hidden;
+  color: var(--cream);
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/img/hero.jpg");
+  background-size: cover;
+  background-position: center 55%;
+  transform: scale(1.02);
+}
+
+/* Dark scrim on top of the photo: keeps the cream text readable
+   (contrast) and stops the headline fighting the latte art */
+.hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    92deg,
+    rgba(10, 24, 28, 0.86) 0%,
+    rgba(10, 24, 28, 0.66) 36%,
+    rgba(10, 24, 28, 0.24) 60%,
+    rgba(10, 24, 28, 0.04) 76%,
+    transparent 92%
+  ),
+  linear-gradient(180deg, transparent 55%, rgba(10, 24, 28, 0.34) 100%);
+}
+
+.hero-content {
+  position: relative;
+  padding-block: clamp(40px, 6vw, 72px);
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 6.2vw, 4.9rem);
+  margin: 18px 0 22px;
+  max-width: 14ch;
+}
+
+.hero-lede {
+  max-width: 44ch;
+  font-size: clamp(0.98rem, 1.4vw, 1.1rem);
+  color: #efe4d8;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+/* The hero label is the one place the label becomes a solid chip */
+.hero .eyebrow {
+  display: inline-flex;
+  background: var(--oat);
+  color: var(--espresso);
+  padding: 6px 12px;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+}
+.hero .eyebrow::before { display: none; }
+
+.hero-note {
+  margin-top: 26px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--oat);
+}
+
+/* ---------- 5. SECTION SHELL / HEADINGS / BUTTONS ------------------- */
+.section { padding-block: var(--sect); }
+.section-tint { background: var(--oat); }
+.section-dark {
+  background: var(--teal);
+  color: var(--cream);
+}
+
+/* On the yellow band, small supporting copy switches to ink:
+   teal on sunburst is only 4.3:1, ink clears 10.5:1 */
+.section-tint .lede,
+.section-tint .menu-footnote,
+.section-tint figcaption { color: var(--espresso); }
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--roast);
+  margin-bottom: 26px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--caramel);
+  flex: none;
+}
+
+.eyebrow-light { color: #ffe7b0; }
+
+.section h2 {
+  font-size: clamp(2rem, 3.9vw, 3.1rem);
+  max-width: 18ch;
+}
+
+.lede {
+  max-width: 52ch;
+  color: var(--espresso);
+  margin-top: 18px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-solid {
+  background: var(--caramel);
+  color: #fff;
+  border-color: var(--caramel);
+}
+.btn-solid:hover { background: var(--teal); border-color: var(--teal); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--cream);
+  border-color: rgba(251, 247, 240, 0.55);
+}
+.btn-ghost:hover { background: var(--cream); color: var(--espresso); border-color: var(--cream); }
+
+.btn-wide { width: 100%; margin-top: 8px; }
+
+/* ---------- 6. ABOUT ----------------------------------------------- */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+}
+
+.split-text p + p { margin-top: 18px; }
+
+.split-text p {
+  color: var(--espresso);
+  max-width: 46ch;
+}
+
+.split-text h2 { margin-bottom: 26px; }
+
+figure { margin: 0; }
+
+.split-figure img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+figcaption {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--roast);
+}
+
+.facts {
+  list-style: none;
+  margin: clamp(44px, 6vw, 76px) 0 0;
+  padding: 28px 0 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 4vw, 48px);
+}
+
+.facts li {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  column-gap: 14px;
+  align-items: start;
+}
+
+.facts .icon {
+  grid-row: span 2;
+  width: 26px;
+  height: 26px;
+  color: var(--caramel);  /* coral, 4.3:1 on cream */
+  align-self: center;
+}
+
+.facts strong {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.facts span {
+  font-size: 0.8rem;
+  color: var(--roast);
+}
+
+/* ---------- 7. MENU ------------------------------------------------ */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.menu-card {
+  border-top: 2px solid var(--espresso);
+  padding-top: 22px;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 30px;
+  color: var(--roast);  /* teal reads better than coral on sunburst */
+  margin-bottom: 16px;
+}
+
+.menu-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+}
+
+.price-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.price-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-block: 8px;
+  font-size: 0.92rem;
+  border-bottom: 1px solid rgba(23, 38, 43, 0.12);
+}
+
+.price-list li:last-child { border-bottom: 0; }
+
+.dots {
+  flex: 1;
+  border-bottom: 1px dotted rgba(23, 38, 43, 0.45);
+  transform: translateY(-3px);
+}
+
+.price {
+  font-variant-numeric: tabular-nums;
+  color: var(--roast);
+}
+
+.menu-footnote {
+  margin-top: 28px;
+  font-size: 0.78rem;
+  color: var(--roast);
+}
+
+.photo-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(16px, 2.6vw, 28px);
+  margin-top: clamp(44px, 6vw, 72px);
+}
+
+.photo-pair img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 2px;
+}
+
+/* ---------- 8. STORY / VIDEO --------------------------------------- */
+.story-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 5vw, 64px);
+  align-items: end;
+}
+
+.story-head p {
+  color: var(--espresso);
+  max-width: 44ch;
+}
+
+.video-frame {
+  margin-top: clamp(40px, 5vw, 64px);
+  background: var(--espresso);
+  padding: clamp(12px, 2vw, 22px);
+}
+
+.video-frame video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  object-fit: cover;
+}
+
+.video-frame figcaption {
+  color: var(--cream);
+  text-align: center;
+  padding-top: 14px;
+  margin-top: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- 9a. CONTACT SKETCH (inside the contact block) ---------- */
+.contact-sketch {
+  margin-top: clamp(28px, 3.6vw, 44px);
+  max-width: 150px;
+}
+
+.contact-sketch img {
+  width: 100%;
+  height: auto;
+  opacity: 0.62;
+}
+
+.contact-sketch figcaption {
+  margin-top: 6px;
+  color: #ffd9a6;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- 9. CONTACT --------------------------------------------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(32px, 6vw, 88px);
+  align-items: start;
+}
+
+.contact-lede {
+  max-width: 42ch;
+  color: #dff0ee;
+  margin-top: 20px;
+}
+
+.contact-list {
+  list-style: none;
+  margin: clamp(32px, 4vw, 48px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 22px;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 0.95rem;
+}
+
+.contact-list .icon {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: var(--oat);
+  margin-top: 3px;
+}
+
+.label {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #ffe7b0;
+  margin-bottom: 3px;
+}
+
+.contact-form {
+  background: var(--cream);
+  color: var(--espresso);
+  padding: clamp(24px, 3.4vw, 40px);
+  border-radius: 2px;
+}
+
+.form-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  margin-bottom: 18px;
+}
+
+.contact-form label {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--roast);
+  margin: 16px 0 6px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--espresso);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: border-color 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--caramel);
+  box-shadow: 0 0 0 3px rgba(217, 58, 80, 0.18);
+}
+
+.contact-form textarea { resize: vertical; }
+
+.form-note {
+  margin-top: 14px;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--roast);
+}
+
+/* ---------- 10. FOOTER --------------------------------------------- */
+.site-footer {
+  background: var(--espresso);
+  color: #cfdcdb;
+  padding-block: 48px;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--cream);
+}
+
+.credit {
+  font-size: 0.76rem;
+  max-width: 46ch;
+}
+
+.footer-meta {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- 11. RESPONSIVE ----------------------------------------- */
+@media (max-width: 900px) {
+  .split,
+  .story-head,
+  .contact-grid { grid-template-columns: 1fr; }
+
+  .menu-grid { grid-template-columns: 1fr; gap: 32px; }
+
+  .contact-form { order: 2; }
+
+  .split-text p,
+  .lede,
+  .story-head p { max-width: 60ch; }
+}
+
+@media (max-width: 760px) {
+  /* On a narrow screen the text sits across the whole photo, so the
+     side-to-side scrim is swapped for a bottom-heavy one */
+  .hero-media::after {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 24, 28, 0.35) 0%,
+      rgba(10, 24, 28, 0.62) 34%,
+      rgba(10, 24, 28, 0.86) 62%,
+      rgba(10, 24, 28, 0.92) 100%
+    );
+  }
+}
+
+@media (max-width: 620px) {
+  html { scroll-padding-top: 84px; }
+
+  .header-inner {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding-block: 12px 10px;
+  }
+
+  .main-nav {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+
+  .main-nav a { font-size: 0.66rem; letter-spacing: 0.1em; }
+
+  .brand-name { font-size: 1.05rem; }
+
+  .hero { min-height: clamp(520px, 82vh, 720px); }
+
+  /* long text blocks drop their character width limit on a phone,
+     otherwise they are wider than the screen and the page scrolls sideways */
+  .hero-lede,
+  .split-text p,
+  .lede,
+  .story-head p,
+  .contact-lede { max-width: none; }
+
+  .hero h1 { max-width: none; }
+
+  .facts { grid-template-columns: 1fr; }
+
+  .photo-pair { grid-template-columns: 1fr; }
+
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+}
